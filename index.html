@@ -78,3 +78,264 @@
         <div>
           <h1 class="font-bold text-lg text-slate-100 tracking-tight">Boolean Logic Assignment</h1>
           <p class="text-xs text-slate-400">Read-Only Viewer • Select Your Assigned Name</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-2 bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span class="text-xs font-mono text-slate-400" id="sessionTag">Session ID: Initializing...</span>
+      </div>
+    </header>
+
+    <!-- WORKSPACE BODY -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col gap-6">
+
+      <!-- TOP INSTRUCTIONS & RULES -->
+      <section class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5 sm:p-6 shadow-xl relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none"></div>
+        <h2 class="text-lg font-bold text-slate-200 mb-3 flex items-center gap-2">
+          <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          Submission Guidelines for Students
+        </h2>
+        <ul class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm text-slate-300">
+          <li class="bg-slate-950/50 p-3 rounded-lg border border-slate-800/50 flex gap-2.5">
+            <span class="font-bold text-indigo-400">1.</span>
+            <span>Locate your <strong>assigned last name</strong> in the list below to find your specific logic expression.</span>
+          </li>
+          <li class="bg-slate-950/50 p-3 rounded-lg border border-slate-800/50 flex gap-2.5">
+            <span class="font-bold text-indigo-400">2.</span>
+            <span>Copy the expression onto paper and show your <strong>step-by-step evaluation process</strong>.</span>
+          </li>
+          <li class="bg-slate-950/50 p-3 rounded-lg border border-slate-800/50 flex gap-2.5">
+            <span class="font-bold text-indigo-400">3.</span>
+            <span>State your final solution (<strong>True</strong> or <strong>False</strong>) clearly at the end of your submission.</span>
+          </li>
+        </ul>
+      </section>
+
+      <!-- SEARCH & QUICK SELECT FILTER -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="relative w-full sm:w-80">
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="Search student name or number..." 
+            onkeyup="filterProblems()"
+            class="w-full bg-slate-900 border border-slate-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 outline-none transition-all"
+          />
+          <svg class="w-4 h-4 text-slate-500 absolute right-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+
+        <div class="text-xs text-slate-400 flex items-center gap-2">
+          <span class="px-2 py-1 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded">Copy Disabled</span>
+          <span class="px-2 py-1 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded">Screen Shield Active</span>
+        </div>
+      </div>
+
+      <!-- PROBLEMS GRID (42 ASSIGNED STUDENTS) -->
+      <div id="problemsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Rendered dynamically by JavaScript -->
+      </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-950 border-t border-slate-800/80 py-4 text-center text-xs text-slate-500">
+      Boolean Logic Evaluation Worksheet • Read-Only DRM Protection Active
+    </footer>
+  </div>
+
+  <script>
+    // LIST OF 42 STUDENTS & ASSIGNED NUMERIC EXPRESSIONS (With && and || operators mixed, no ! or !=)
+    const problemData = [
+      { name: "Gulay", expr: "8 >= 10 && 8 == 8 || 9 >= 10 && 10 == 10" },
+      { name: "Pabular", expr: "5 < 10 && 3 < 4 || 7 == 7 && 12 > 2" },
+      { name: "Cañada", expr: "4 == 4 && 9 > 15 || 6 <= 6 && 2 == 3" },
+      { name: "Sebolino", expr: "10 <= 5 || 3 == 3 && 8 < 12 || 1 == 1" },
+      { name: "Galang", expr: "15 >= 15 && 20 <= 10 || 4 > 4 && 9 == 9" },
+      { name: "Bacabis", expr: "7 == 7 && 5 <= 8 || 11 >= 10 && 2 < 6" },
+      { name: "Estel", expr: "12 < 5 || 8 > 20 || 3 == 9 || 1 == 1" },
+      { name: "Jandomon", expr: "2 > 1 && 4 < 8 || 6 < 7 && 9 == 10" },
+      { name: "Yandug", expr: "6 > 6 || 3 >= 2 && 10 > 5 || 4 == 4" },
+      { name: "Rife", expr: "14 >= 10 && 5 == 5 || 2 > 8 && 9 <= 9" },
+      { name: "Abasolo", expr: "3 < 3 || 8 < 4 || 12 == 10 && 1 > 0" },
+      { name: "Pabualan", expr: "9 <= 12 && 4 == 4 || 7 >= 7 && 10 > 2" },
+      { name: "Tiozon", expr: "11 > 10 && 2 == 2 || 5 <= 4 && 8 == 8" },
+      { name: "Creencia", expr: "6 < 9 || 10 < 10 && 3 > 1 || 4 == 5" },
+      { name: "Bantilan", expr: "10 == 10 && 5 > 2 || 8 <= 8 && 15 > 20" },
+      { name: "Bantug", expr: "4 > 10 || 6 == 6 && 3 > 1 || 8 == 8" },
+      { name: "De Lara", expr: "1 < 2 && 3 < 4 || 5 < 6 && 7 == 8" },
+      { name: "Talja", expr: "9 >= 9 && 2 < 3 || 4 < 10 && 15 >= 12" },
+      { name: "Tan", expr: "5 > 10 || 7 > 7 || 2 > 5 || 1 == 1" },
+      { name: "Calustre", expr: "13 <= 15 && 8 == 8 || 9 >= 3 && 4 < 7" },
+      { name: "Pocong", expr: "4 > 2 && 8 < 5 || 6 == 6 && 3 > 3" },
+      { name: "Ragmac", expr: "10 < 10 || 5 <= 2 && 7 == 7 || 1 > 0" },
+      { name: "Manla", expr: "3 < 7 && 12 >= 12 || 4 < 5 && 10 > 2" },
+      { name: "Gutang", expr: "15 < 10 || 4 == 4 && 8 <= 12 || 6 > 1" },
+      { name: "Miculob", expr: "6 >= 8 || 3 < 1 && 9 == 9 || 2 > 2" },
+      { name: "Dima-ano", expr: "5 == 5 && 8 > 3 || 11 <= 12 && 14 > 10" },
+      { name: "Cubao", expr: "7 == 8 || 9 > 2 && 4 <= 4 || 10 > 10" },
+      { name: "Danuco", expr: "2 < 5 && 6 > 3 || 10 < 11 && 8 >= 8" },
+      { name: "Gallo", expr: "14 > 20 || 3 >= 8 || 5 == 6 || 2 < 9" },
+      { name: "Valencia", expr: "1 == 1 && 10 >= 5 || 4 == 4 && 12 > 3" },
+      { name: "Opeña", expr: "8 <= 10 && 3 > 5 || 7 == 7 && 12 > 15" },
+      { name: "Ranara", expr: "2 <= 8 || 3 > 3 && 9 > 1 || 6 == 6" },
+      { name: "Españo", expr: "5 < 6 && 10 >= 10 || 4 < 2 && 8 == 8" },
+      { name: "Negro", expr: "11 > 5 && 2 == 3 || 9 < 12 && 6 == 6" },
+      { name: "Leonor", expr: "7 > 7 || 4 <= 1 || 10 == 10 || 3 < 8" },
+      { name: "Daniel", expr: "3 > 1 && 8 == 8 || 5 < 10 && 12 > 12" },
+      { name: "Misa", expr: "9 < 15 && 6 <= 10 || 2 == 2 && 7 > 3" },
+      { name: "Abelo", expr: "4 == 5 || 8 < 2 || 10 <= 3 || 1 == 2" },
+      { name: "Calamba", expr: "6 <= 6 && 12 > 8 || 3 < 4 && 5 > 5" },
+      { name: "Bajao", expr: "8 < 8 || 2 <= 5 && 9 >= 9 || 11 > 2" },
+      { name: "Odrigue", expr: "10 > 2 && 5 == 5 || 8 < 4 && 3 == 3" },
+      { name: "Reserved / Bonus", expr: "7 < 7 || 4 >= 10 || 6 > 6 || 1 == 1" }
+    ];
+
+    // Generate Session Tag
+    const sessionId = Math.random().toString(36).substring(2, 8).toUpperCase();
+    document.getElementById('sessionTag').innerText = `Session ID: ${sessionId}`;
+
+    // RENDER EXPRESSION ON HTML5 CANVAS TO PREVENT TEXT SELECTION & DOM INSPECTION
+    function drawExpressionCanvas(canvasId, text) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const dpr = window.devicePixelRatio || 1;
+
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+
+      ctx.clearRect(0, 0, rect.width, rect.height);
+
+      // Render expression text
+      ctx.font = '600 15px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace';
+      ctx.fillStyle = '#38bdf8'; // Sky blue text color
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, 12, rect.height / 2);
+
+      // Dynamic Watermark
+      ctx.font = '700 10px sans-serif';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+      ctx.fillText(`PROTECTED • ${sessionId}`, rect.width - 130, rect.height / 2);
+    }
+
+    // INITIALIZE & RENDER PROBLEM CARDS
+    function renderProblems() {
+      const grid = document.getElementById('problemsGrid');
+      grid.innerHTML = '';
+
+      problemData.forEach((item, index) => {
+        const num = index + 1;
+        const canvasId = `canvas-prob-${num}`;
+
+        const card = document.createElement('div');
+        card.className = "problem-card bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-lg hover:border-slate-700 transition-all flex flex-col justify-between gap-3";
+        card.setAttribute('data-search', `${num} ${item.name}`.toLowerCase());
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between border-b border-slate-800/80 pb-2.5">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-md bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 font-bold text-xs flex items-center justify-center">${num}</span>
+              <h3 class="font-bold text-slate-100 text-sm tracking-wide">${item.name}</h3>
+            </div>
+            <span class="text-[10px] font-mono bg-slate-950 px-2 py-0.5 rounded text-slate-500 border border-slate-800">Assignee</span>
+          </div>
+          
+          <div class="bg-slate-950 border border-slate-800 rounded-lg p-1.5 relative overflow-hidden">
+            <canvas id="${canvasId}" class="w-full h-10 block"></canvas>
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+
+      // Render expression canvases after DOM elements are placed
+      setTimeout(() => {
+        problemData.forEach((item, index) => {
+          drawExpressionCanvas(`canvas-prob-${index + 1}`, item.expr);
+        });
+      }, 50);
+    }
+
+    // FILTER FUNCTION
+    function filterProblems() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const cards = document.querySelectorAll('.problem-card');
+
+      cards.forEach(card => {
+        const matchData = card.getAttribute('data-search');
+        if (matchData.includes(query)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // SECURITY & ANTI-SCREENSHOT HANDLERS
+    const overlay = document.getElementById('securityOverlay');
+    const mainContent = document.getElementById('mainContent');
+
+    function triggerSecurityBlur() {
+      overlay.classList.remove('opacity-0', 'pointer-events-none');
+      overlay.classList.add('opacity-100', 'pointer-events-auto');
+      mainContent.classList.add('security-blur');
+    }
+
+    function restoreFocus() {
+      overlay.classList.remove('opacity-100', 'pointer-events-auto');
+      overlay.classList.add('opacity-0', 'pointer-events-none');
+      mainContent.classList.remove('security-blur');
+    }
+
+    // Tab switch / blur detection
+    window.addEventListener('blur', triggerSecurityBlur);
+    window.addEventListener('focus', restoreFocus);
+
+    // Prevent context menu (right click)
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+    // Intercept Screenshot and Inspector Keyboard Shortcuts
+    document.addEventListener('keydown', (e) => {
+      // Prevent PrintScreen key
+      if (e.key === 'PrintScreen') {
+        triggerSecurityBlur();
+        navigator.clipboard.writeText(''); // Attempt to flush clipboard
+        e.preventDefault();
+      }
+
+      // Prevent Ctrl+P, Ctrl+U, F12, Ctrl+Shift+I/J/C
+      if (
+        (e.ctrlKey && (e.key === 'p' || e.key === 'u' || e.key === 's')) ||
+        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+        e.key === 'F12'
+      ) {
+        e.preventDefault();
+        triggerSecurityBlur();
+      }
+
+      // Detect Windows Snipping Tool (Win + Shift + S) or Mac Screenshot (Cmd + Shift + 3/4/5)
+      if ((e.metaKey || e.key === 'Meta') && e.shiftKey) {
+        triggerSecurityBlur();
+      }
+    });
+
+    // Handle window resize canvas re-renders
+    window.addEventListener('resize', () => {
+      problemData.forEach((item, index) => {
+        drawExpressionCanvas(`canvas-prob-${index + 1}`, item.expr);
+      });
+    });
+
+    // Initialize on load
+    window.onload = renderProblems;
+  </script>
+</body>
+</html>

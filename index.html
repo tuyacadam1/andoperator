@@ -1,1 +1,580 @@
 
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boolean Logic Problem Viewer</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Strict Text Selection & Interaction Blocking */
+        * {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            -webkit-touch-callout: none !important;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #090d16;
+            color: #f1f5f9;
+        }
+
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Anti-Screenshot Focus Blur / Obscure */
+        .blur-protection {
+            filter: blur(28px) grayscale(100%) !important;
+            opacity: 0.1 !important;
+            transition: filter 0.15s ease, opacity 0.15s ease;
+            pointer-events: none !important;
+        }
+
+        /* Subtle Watermark Background */
+        .watermark-bg {
+            background-image: repeating-linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.012),
+                rgba(255, 255, 255, 0.012) 100px,
+                transparent 100px,
+                transparent 200px
+            );
+        }
+
+        /* Floating Dynamic Security DRM Overlay */
+        .drm-watermark-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 25;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1rem;
+            opacity: 0.22;
+            overflow: hidden;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.7rem;
+            color: #f43f5e;
+            text-shadow: 0 0 2px rgba(0,0,0,0.8);
+        }
+
+        /* Complete Suppression on Print / Print Preview */
+        @media print {
+            html, body {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="min-h-full flex flex-col watermark-bg relative overflow-x-hidden">
+
+    <!-- Window Unfocus / Screen-Capture Blur Shield -->
+    <div id="unfocusShield" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-2xl flex flex-col items-center justify-center text-center p-6 transition-all duration-200 opacity-0 pointer-events-none">
+        <div class="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400 mb-4 shadow-2xl">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+        </div>
+        <h2 class="text-xl font-bold text-white mb-2">Content Hidden for Security</h2>
+        <p class="text-sm text-slate-400 max-w-md">The window lost focus, or a screenshot/snipping tool attempt was detected. Re-focus this window to resume viewing.</p>
+    </div>
+
+    <!-- Security Toast Notification -->
+    <div id="securityAlert" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-rose-900/90 text-rose-100 px-5 py-3.5 rounded-xl border border-rose-500/50 shadow-2xl flex items-center gap-3 backdrop-blur-md">
+        <svg class="w-6 h-6 text-rose-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+        </svg>
+        <div>
+            <p class="font-bold text-sm">Action Blocked</p>
+            <p class="text-xs text-rose-200">Screenshots, copying, inspecting, and printing are strictly disabled.</p>
+        </div>
+    </div>
+
+    <!-- Protected Viewport Wrapper -->
+    <div id="protectedContent" class="flex-1 flex flex-col transition-all duration-150">
+
+        <!-- Navigation Header -->
+        <header class="border-b border-slate-800/80 bg-slate-900/80 backdrop-blur-md sticky top-0 z-30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-600/20 border border-indigo-500/40 flex items-center justify-center text-indigo-400 font-bold text-xl shadow-inner">
+                        &amp;&amp;
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-slate-100 tracking-tight">Boolean Logic Practice Viewer</h1>
+                        <p class="text-xs text-slate-400">Protected Workspace • Handwritten Solutions Required</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <button onclick="pickRandomQuestion()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-medium text-sm rounded-lg shadow-lg shadow-indigo-600/20 border border-indigo-400/30 transition flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                        </svg>
+                        Pick Random Question
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative z-10">
+            
+            <!-- Left / Top Column: Problem Viewer Card -->
+            <section class="lg:col-span-7 flex flex-col gap-6">
+                
+                <!-- Instructions Box -->
+                <div class="bg-indigo-950/40 border border-indigo-500/20 rounded-2xl p-5 text-slate-300 text-sm flex gap-4 items-start shadow-xl">
+                    <div class="p-2 bg-indigo-600/20 rounded-xl text-indigo-400 shrink-0 border border-indigo-500/30">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-indigo-200 mb-1">Student Instructions</h3>
+                        <ol class="list-decimal list-inside space-y-1 text-xs text-slate-300">
+                            <li>Select a problem number from the grid or click <strong>Pick Random Question</strong>.</li>
+                            <li>Write down the <strong>Problem Number</strong> on your answer sheet.</li>
+                            <li>Show your step-by-step evaluation on paper for every sub-expression before stating your final answer (<code class="text-indigo-300">true</code> or <code class="text-indigo-300">false</code>).</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Active Question Card with DRM overlay -->
+                <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden flex flex-col justify-between min-h-[380px]">
+                    
+                    <!-- Dynamic DRM Watermark Layer -->
+                    <div class="drm-watermark-overlay font-mono">
+                        <div class="flex justify-between">
+                            <span>SESSION: <span id="drmSession">LIVE-9823</span></span>
+                            <span>PROT: ENFORCED</span>
+                        </div>
+                        <div class="flex justify-between items-center my-auto transform -rotate-12 opacity-80 text-center font-bold text-xs sm:text-sm tracking-widest text-rose-500/40">
+                            <span>DO NOT SCREENSHOT • PROTECTED EVALUATION VIEW</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>TS: <span id="drmTime">--:--:--</span></span>
+                            <span>NON-TRANSFERABLE</span>
+                        </div>
+                    </div>
+
+                    <!-- Card Header -->
+                    <div>
+                        <div class="flex items-center justify-between mb-6 relative z-10">
+                            <span id="questionTag" class="px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-xs font-bold uppercase tracking-wider">
+                                Problem #1
+                            </span>
+                            <span class="text-xs text-slate-500 font-mono">Operator: Comparison &amp; AND (&amp;&amp;)</span>
+                        </div>
+
+                        <h2 class="text-xs uppercase font-semibold text-slate-400 mb-2 tracking-widest relative z-10">Boolean Expression to Solve:</h2>
+                        
+                        <!-- Anti-Scrape Canvas Render Container -->
+                        <div class="bg-slate-950 p-6 rounded-xl border border-slate-800/80 shadow-inner my-2 relative z-10 flex items-center justify-center min-h-[90px]">
+                            <canvas id="problemCanvas" class="w-full h-auto max-w-full block"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Step-by-Step Breakdown Helper Box -->
+                    <div class="mt-6 pt-6 border-t border-slate-800/80 relative z-10">
+                        <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Required Paper Format Example:</h3>
+                        <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800 text-xs code-font text-slate-400 space-y-1.5">
+                            <p class="text-indigo-400 font-sans font-semibold mb-1">Example for Problem #1:</p>
+                            <p>1) Evaluate left to right:</p>
+                            <p class="text-slate-300 pl-3">&bull; 8 &gt;= 10 &rarr; <span class="text-rose-400">false</span></p>
+                            <p class="text-slate-300 pl-3">&bull; Since first term is false in &amp;&amp; series &rarr; <span class="text-amber-300">Final Answer: false</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Controls -->
+                    <div class="mt-8 flex items-center justify-between gap-4 relative z-10">
+                        <button onclick="navigateQuestion(-1)" id="prevBtn" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-slate-200 font-medium text-sm rounded-xl transition border border-slate-700/60 flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                            Previous
+                        </button>
+                        <span id="progressText" class="text-xs text-slate-400 font-mono">1 of 42</span>
+                        <button onclick="navigateQuestion(1)" id="nextBtn" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-slate-200 font-medium text-sm rounded-xl transition border border-slate-700/60 flex items-center gap-2">
+                            Next
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Right / Bottom Column: Question Grid Selector -->
+            <section class="lg:col-span-5 bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-2xl flex flex-col gap-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-base font-bold text-slate-200">Select Question</h2>
+                    <span id="gridCountBadge" class="text-xs text-slate-400">42 Problems Total</span>
+                </div>
+
+                <!-- Search / Filter input -->
+                <div class="relative">
+                    <input type="text" id="searchInput" oninput="filterGrid()" placeholder="Filter by number or expression..." class="w-full bg-slate-950 border border-slate-800 text-slate-200 text-xs rounded-xl px-3.5 py-2.5 pr-8 focus:outline-none focus:border-indigo-500 transition placeholder:text-slate-500">
+                    <svg class="w-4 h-4 text-slate-500 absolute right-2.5 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </div>
+                
+                <!-- Grid of 42 buttons -->
+                <div id="gridContainer" class="grid grid-cols-6 sm:grid-cols-7 gap-2.5 max-h-[380px] overflow-y-auto pr-1">
+                    <!-- Javascript will inject 42 buttons here -->
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="mt-auto border-t border-slate-800/60 bg-slate-950 py-6 text-center text-xs text-slate-500 relative z-10">
+            <p>Boolean Logic Classroom Workspace • Anti-Capture Protection Enabled</p>
+        </footer>
+
+    </div>
+
+    <script>
+        // Data set: 42 Unique Boolean Expressions (using comparison operators and &&)
+        const problems = [
+            "8 >= 10 && 8 == 8 && 9 >= 10 && 10 == 10",
+            "5 < 10 && 3 < 4 && 7 == 7 && 12 > 2",
+            "4 == 4 && 9 > 15 && 6 <= 6 && 2 == 3",
+            "10 <= 5 && 3 == 3 && 8 < 12 && 1 == 1",
+            "15 >= 15 && 20 <= 10 && 4 > 4 && 9 == 9",
+            "7 == 7 && 5 <= 8 && 11 >= 10 && 2 < 6",
+            "12 < 5 && 8 > 20 && 3 == 9 && 1 == 1",
+            "2 > 1 && 4 < 8 && 6 < 7 && 9 == 10",
+            "6 > 6 && 3 >= 2 && 10 > 5 && 4 == 4",
+            "14 >= 10 && 5 == 5 && 2 > 8 && 9 <= 9",
+            "3 < 3 && 8 < 4 && 12 == 10 && 1 > 0",
+            "9 <= 12 && 4 == 4 && 7 >= 7 && 10 > 2",
+            "11 > 10 && 2 == 2 && 5 <= 4 && 8 == 8",
+            "6 < 9 && 10 < 10 && 3 > 1 && 4 == 5",
+            "10 == 10 && 5 > 2 && 8 <= 8 && 15 > 20",
+            "4 > 10 && 6 == 6 && 3 > 1 && 8 == 8",
+            "1 < 2 && 3 < 4 && 5 < 6 && 7 == 8",
+            "9 >= 9 && 2 < 3 && 4 < 10 && 15 >= 12",
+            "5 > 10 && 7 > 7 && 2 > 5 && 1 == 1",
+            "13 <= 15 && 8 == 8 && 9 >= 3 && 4 < 7",
+            "4 > 2 && 8 < 5 && 6 == 6 && 3 > 3",
+            "10 < 10 && 5 <= 2 && 7 == 7 && 1 > 0",
+            "3 < 7 && 12 >= 12 && 4 < 5 && 10 > 2",
+            "15 < 10 && 4 == 4 && 8 <= 12 && 6 > 1",
+            "6 >= 8 && 3 < 1 && 9 == 9 && 2 > 2",
+            "5 == 5 && 8 > 3 && 11 <= 12 && 14 > 10",
+            "7 == 8 && 9 > 2 && 4 <= 4 && 10 > 10",
+            "2 < 5 && 6 > 3 && 10 < 11 && 8 >= 8",
+            "14 > 20 && 3 >= 8 && 5 == 6 && 2 < 9",
+            "1 == 1 && 10 >= 5 && 4 == 4 && 12 > 3",
+            "8 <= 10 && 3 > 5 && 7 == 7 && 12 > 15",
+            "2 <= 8 && 3 > 3 && 9 > 1 && 6 == 6",
+            "5 < 6 && 10 >= 10 && 4 < 2 && 8 == 8",
+            "11 > 5 && 2 == 3 && 9 < 12 && 6 == 6",
+            "7 > 7 && 4 <= 1 && 10 == 10 && 3 < 8",
+            "3 > 1 && 8 == 8 && 5 < 10 && 12 > 12",
+            "9 < 15 && 6 <= 10 && 2 == 2 && 7 > 3",
+            "4 == 5 && 8 < 2 && 10 <= 3 && 1 == 2",
+            "6 <= 6 && 12 > 8 && 3 < 4 && 5 > 5",
+            "8 < 8 && 2 <= 5 && 9 >= 9 && 11 > 2",
+            "10 > 2 && 5 == 5 && 8 < 4 && 3 == 3",
+            "7 < 7 && 4 >= 10 && 6 > 6 && 1 == 1"
+        ];
+
+        let currentIndex = 0;
+        let alertTimeout = null;
+        let activeFilter = "";
+
+        // Generate Random Session ID
+        const sessionId = "SESSION-" + Math.floor(100000 + Math.random() * 900000);
+        document.getElementById('drmSession').innerText = sessionId;
+
+        // Render Canvas for Problem Text (Prevents simple HTML inspection scraping)
+        function renderProblemCanvas(text) {
+            const canvas = document.getElementById('problemCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas resolution
+            const dpr = window.devicePixelRatio || 1;
+            const width = 650;
+            const height = 70;
+            
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            canvas.style.width = '100%';
+            canvas.style.height = 'auto';
+
+            ctx.scale(dpr, dpr);
+            ctx.clearRect(0, 0, width, height);
+
+            // Draw Background
+            ctx.fillStyle = "#020617";
+            ctx.fillRect(0, 0, width, height);
+
+            // Draw Canvas Text
+            ctx.font = "bold 20px 'Fira Code', monospace";
+            ctx.fillStyle = "#fde047";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(text, width / 2, height / 2);
+        }
+
+        // Initialize grid on DOM ready
+        function initGrid() {
+            const container = document.getElementById('gridContainer');
+            container.innerHTML = '';
+
+            let visibleCount = 0;
+
+            for (let i = 0; i < problems.length; i++) {
+                const expr = problems[i].toLowerCase();
+                const numStr = (i + 1).toString();
+                
+                if (activeFilter && !expr.includes(activeFilter.toLowerCase()) && !numStr.includes(activeFilter)) {
+                    continue;
+                }
+
+                visibleCount++;
+                const btn = document.createElement('button');
+                btn.id = `grid-btn-${i}`;
+                btn.innerText = i + 1;
+                btn.onclick = () => selectQuestion(i);
+                btn.className = `h-11 rounded-xl text-sm font-bold transition flex items-center justify-center border ${
+                    i === currentIndex
+                        ? 'bg-indigo-600 text-white border-indigo-400 shadow-md shadow-indigo-600/30 ring-2 ring-indigo-500/50'
+                        : 'bg-slate-950 text-slate-300 border-slate-800 hover:bg-slate-800 hover:text-white'
+                }`;
+                container.appendChild(btn);
+            }
+
+            document.getElementById('gridCountBadge').innerText = `${visibleCount} of 42 Problems`;
+            updateView();
+        }
+
+        function filterGrid() {
+            activeFilter = document.getElementById('searchInput').value.trim();
+            initGrid();
+        }
+
+        // Select specific question
+        function selectQuestion(index) {
+            if (index < 0 || index >= problems.length) return;
+            currentIndex = index;
+            updateView();
+        }
+
+        // Previous / Next Navigation
+        function navigateQuestion(direction) {
+            const newIndex = currentIndex + direction;
+            if (newIndex >= 0 && newIndex < problems.length) {
+                currentIndex = newIndex;
+                updateView();
+            }
+        }
+
+        // Pick Random Question
+        function pickRandomQuestion() {
+            let rand;
+            do {
+                rand = Math.floor(Math.random() * problems.length);
+            } while (rand === currentIndex && problems.length > 1);
+            
+            currentIndex = rand;
+            updateView();
+        }
+
+        // Update UI components
+        function updateView() {
+            renderProblemCanvas(problems[currentIndex]);
+            document.getElementById('questionTag').innerText = `Problem #${currentIndex + 1}`;
+            document.getElementById('progressText').innerText = `${currentIndex + 1} of ${problems.length}`;
+
+            // Update Previous/Next buttons disable state
+            document.getElementById('prevBtn').disabled = currentIndex === 0;
+            document.getElementById('prevBtn').classList.toggle('opacity-40', currentIndex === 0);
+            document.getElementById('prevBtn').classList.toggle('cursor-not-allowed', currentIndex === 0);
+
+            document.getElementById('nextBtn').disabled = currentIndex === problems.length - 1;
+            document.getElementById('nextBtn').classList.toggle('opacity-40', currentIndex === problems.length - 1);
+            document.getElementById('nextBtn').classList.toggle('cursor-not-allowed', currentIndex === problems.length - 1);
+
+            // Highlight selected grid button
+            for (let i = 0; i < problems.length; i++) {
+                const btn = document.getElementById(`grid-btn-${i}`);
+                if (btn) {
+                    if (i === currentIndex) {
+                        btn.className = 'h-11 rounded-xl text-sm font-bold transition flex items-center justify-center border bg-indigo-600 text-white border-indigo-400 shadow-md shadow-indigo-600/30 ring-2 ring-indigo-500/50';
+                    } else {
+                        btn.className = 'h-11 rounded-xl text-sm font-bold transition flex items-center justify-center border bg-slate-950 text-slate-300 border-slate-800 hover:bg-slate-800 hover:text-white';
+                    }
+                }
+            }
+        }
+
+        // Trigger warning alert when illegal copy/inspect/screenshot action is attempted
+        function triggerSecurityToast() {
+            const toast = document.getElementById('securityAlert');
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            if (alertTimeout) clearTimeout(alertTimeout);
+
+            alertTimeout = setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // ANTI-SCREENSHOT & BLUR PROTECTION LOGIC
+        const protectedContent = document.getElementById('protectedContent');
+        const unfocusShield = document.getElementById('unfocusShield');
+
+        function concealContent() {
+            protectedContent.classList.add('blur-protection');
+            unfocusShield.classList.remove('opacity-0', 'pointer-events-none');
+            unfocusShield.classList.add('opacity-100');
+        }
+
+        function revealContent() {
+            protectedContent.classList.remove('blur-protection');
+            unfocusShield.classList.remove('opacity-100');
+            unfocusShield.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        // Blur on window blur / tab switch / snipping tool activation
+        window.addEventListener('blur', () => {
+            concealContent();
+        });
+
+        window.addEventListener('focus', () => {
+            revealContent();
+        });
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                concealContent();
+            } else {
+                revealContent();
+            }
+        });
+
+        // Clear Clipboard on PrintScreen key detection
+        function wipeClipboard() {
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText('');
+                }
+            } catch (err) {}
+        }
+
+        // Keydown Interception for Screenshots & Developer Tools
+        document.addEventListener('keydown', (e) => {
+            const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+            const ctrlCmd = isMac ? e.metaKey : e.ctrlKey;
+            const key = e.key ? e.key.toLowerCase() : '';
+
+            // PrintScreen key intercept
+            if (e.key === 'PrintScreen' || e.keyCode === 44) {
+                e.preventDefault();
+                wipeClipboard();
+                concealContent();
+                triggerSecurityToast();
+                setTimeout(revealContent, 1200);
+                return false;
+            }
+
+            // F12 key
+            if (e.keyCode === 123) {
+                e.preventDefault();
+                triggerSecurityToast();
+                return false;
+            }
+
+            // Win+Shift+S or Cmd+Shift+3/4/5
+            if ((e.shiftKey && (e.key === 'S' || e.key === 's') && e.metaKey) || 
+                (isMac && e.shiftKey && (e.key === '3' || e.key === '4' || e.key === '5'))) {
+                e.preventDefault();
+                concealContent();
+                triggerSecurityToast();
+                setTimeout(revealContent, 1500);
+                return false;
+            }
+
+            if (ctrlCmd) {
+                // Ctrl+C, Ctrl+U, Ctrl+P, Ctrl+S, Ctrl+A, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+                if (
+                    key === 'c' || 
+                    key === 'u' || 
+                    key === 'p' || 
+                    key === 's' || 
+                    key === 'a' ||
+                    (e.shiftKey && (key === 'i' || key === 'j' || key === 'c' || key === 's'))
+                ) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    triggerSecurityToast();
+                    return false;
+                }
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.key === 'PrintScreen' || e.keyCode === 44) {
+                wipeClipboard();
+            }
+        });
+
+        // Prevent Context Menu (Right Click)
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            triggerSecurityToast();
+            return false;
+        });
+
+        // Prevent Copying & Cut
+        document.addEventListener('copy', (e) => { e.preventDefault(); triggerSecurityToast(); return false; });
+        document.addEventListener('cut', (e) => { e.preventDefault(); triggerSecurityToast(); });
+        document.addEventListener('selectstart', (e) => { e.preventDefault(); });
+
+        // Dynamic DRM timestamp update
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('drmTime').innerText = now.toTimeString().split(' ')[0];
+        }, 1000);
+
+        // Initialize App on window load
+        window.onload = () => {
+            initGrid();
+            window.addEventListener('resize', () => renderProblemCanvas(problems[currentIndex]));
+        };
+    </script>
+</body>
+</html>

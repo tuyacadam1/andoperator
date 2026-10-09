@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-900 text-slate-100 select-none">
+<html lang="en" class="h-full bg-slate-950 text-slate-100 select-none">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Boolean Logic Problem Assignment</title>
+  <title>Boolean Logic Problem Assignment (5 Problems / Student)</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -28,7 +28,7 @@
 
     /* Blur class applied on tab focus loss or screenshot detection */
     .security-blur {
-      filter: blur(28px) grayscale(100%);
+      filter: blur(32px) grayscale(100%);
       pointer-events: none;
     }
 
@@ -76,8 +76,8 @@
           </svg>
         </div>
         <div>
-          <h1 class="font-bold text-lg text-slate-100 tracking-tight">Boolean Logic Assignment (2 Problems / Student)</h1>
-          <p class="text-xs text-slate-400">Read-Only Viewer • Search Your Name to Find Both assigned Problems</p>
+          <h1 class="font-bold text-lg text-slate-100 tracking-tight">Boolean Logic Assignment (5 Problems / Student)</h1>
+          <p class="text-xs text-slate-400">Read-Only Viewer • Search Your Name to Find Your 5 Assigned Items</p>
         </div>
       </div>
 
@@ -102,15 +102,15 @@
         <ul class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm text-slate-300">
           <li class="bg-slate-950/50 p-3 rounded-lg border border-slate-800/50 flex gap-2.5">
             <span class="font-bold text-indigo-400">1.</span>
-            <span>Search your <strong>last name</strong> to find your <strong>2 assigned problems</strong> (Part 1 and Part 2).</span>
+            <span>Search your <strong>last name</strong> to view all <strong>5 assigned problems</strong> (Items 1 through 5).</span>
           </li>
           <li class="bg-slate-950/50 p-3 rounded-lg border border-slate-800/50 flex gap-2.5">
             <span class="font-bold text-indigo-400">2.</span>
-            <span>Copy both expressions on paper and show step-by-step evaluations using standard operator precedence (<code>&amp;&amp;</code> before <code>||</code>).</span>
+            <span>Copy each expression on paper and write out step-by-step evaluations using standard precedence (<code>&amp;&amp;</code> before <code>||</code>).</span>
           </li>
           <li class="bg-slate-950/50 p-3 rounded-lg border border-slate-800/50 flex gap-2.5">
             <span class="font-bold text-indigo-400">3.</span>
-            <span>Clearly write your final answer (<strong>True</strong> or <strong>False</strong>) for each problem.</span>
+            <span>State your final answer clearly as either <strong>True</strong> or <strong>False</strong> for each item.</span>
           </li>
         </ul>
       </section>
@@ -136,7 +136,7 @@
         </div>
       </div>
 
-      <!-- PROBLEMS GRID (64 ASSIGNED ITEMS) -->
+      <!-- PROBLEMS GRID (215 ASSIGNED ITEMS) -->
       <div id="problemsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <!-- Rendered dynamically by JavaScript -->
       </div>
@@ -150,83 +150,51 @@
   </div>
 
   <script>
-    // 32 STUDENTS x 2 PROBLEMS = 64 TOTAL PROBLEMS
-    const problemData = [
-      { name: "Buque (Part 1)", expr: "8 >= 10 && 8 == 8 || 9 >= 10 && 10 == 10" },
-      { name: "Buque (Part 2)", expr: "5 < 10 && 3 < 4 || 7 == 7 && 12 > 2" },
-      { name: "Tuyor (Part 1)", expr: "4 == 4 && 9 > 15 || 6 <= 6 && 2 == 3" },
-      { name: "Tuyor (Part 2)", expr: "10 <= 5 || 3 == 3 && 8 < 12 || 1 == 1" },
-      { name: "Tabunan (Part 1)", expr: "15 >= 15 && 20 <= 10 || 4 > 4 && 9 == 9" },
-      { name: "Tabunan (Part 2)", expr: "7 == 7 && 5 <= 8 || 11 >= 10 && 2 < 6" },
-      { name: "Regodon (Part 1)", expr: "12 < 5 || 8 > 20 || 3 == 9 || 1 == 1" },
-      { name: "Regodon (Part 2)", expr: "2 > 1 && 4 < 8 || 6 < 7 && 9 == 10" },
-      { name: "Ordiz (Part 1)", expr: "6 > 6 || 3 >= 2 && 10 > 5 || 4 == 4" },
-      { name: "Ordiz (Part 2)", expr: "14 >= 10 && 5 == 5 || 2 > 8 && 9 <= 9" },
-      { name: "Tago (Part 1)", expr: "3 < 3 || 8 < 4 || 12 == 10 && 1 > 0" },
-      { name: "Tago (Part 2)", expr: "9 <= 12 && 4 == 4 || 7 >= 7 && 10 > 2" },
-      { name: "Roquillas (Part 1)", expr: "11 > 10 && 2 == 2 || 5 <= 4 && 8 == 8" },
-      { name: "Roquillas (Part 2)", expr: "6 < 9 || 10 < 10 && 3 > 1 || 4 == 5" },
-      { name: "Romanos (Part 1)", expr: "10 == 10 && 5 > 2 || 8 <= 8 && 15 > 20" },
-      { name: "Romanos (Part 2)", expr: "4 > 10 || 6 == 6 && 3 > 1 || 8 == 8" },
-      { name: "Dalanon (Part 1)", expr: "1 < 2 && 3 < 4 || 5 < 6 && 7 == 8" },
-      { name: "Dalanon (Part 2)", expr: "9 >= 9 && 2 < 3 || 4 < 10 && 15 >= 12" },
-      { name: "Desabille (Part 1)", expr: "5 > 10 || 7 > 7 || 2 > 5 || 1 == 1" },
-      { name: "Desabille (Part 2)", expr: "13 <= 15 && 8 == 8 || 9 >= 3 && 4 < 7" },
-      { name: "Calamba (Part 1)", expr: "4 > 2 && 8 < 5 || 6 == 6 && 3 > 3" },
-      { name: "Calamba (Part 2)", expr: "10 < 10 || 5 <= 2 && 7 == 7 || 1 > 0" },
-      { name: "Velasco (Part 1)", expr: "3 < 7 && 12 >= 12 || 4 < 5 && 10 > 2" },
-      { name: "Velasco (Part 2)", expr: "15 < 10 || 4 == 4 && 8 <= 12 || 6 > 1" },
-      { name: "Beroy (Part 1)", expr: "6 >= 8 || 3 < 1 && 9 == 9 || 2 > 2" },
-      { name: "Beroy (Part 2)", expr: "5 == 5 && 8 > 3 || 11 <= 12 && 14 > 10" },
-      { name: "Arnaiz (Part 1)", expr: "7 == 8 || 9 > 2 && 4 <= 4 || 10 > 10" },
-      { name: "Arnaiz (Part 2)", expr: "2 < 5 && 6 > 3 || 10 < 11 && 8 >= 8" },
-      { name: "Ambida (Part 1)", expr: "14 > 20 || 3 >= 8 || 5 == 6 || 2 < 9" },
-      { name: "Ambida (Part 2)", expr: "1 == 1 && 10 >= 5 || 4 == 4 && 12 > 3" },
-      { name: "Auditor (Part 1)", expr: "8 <= 10 && 3 > 5 || 7 == 7 && 12 > 15" },
-      { name: "Auditor (Part 2)", expr: "2 <= 8 || 3 > 3 && 9 > 1 || 6 == 6" },
-      { name: "Artita (Part 1)", expr: "5 < 6 && 10 >= 10 || 4 < 2 && 8 == 8" },
-      { name: "Artita (Part 2)", expr: "11 > 5 && 2 == 3 || 9 < 12 && 6 == 6" },
-      { name: "Suansing (Part 1)", expr: "7 > 7 || 4 <= 1 || 10 == 10 || 3 < 8" },
-      { name: "Suansing (Part 2)", expr: "3 > 1 && 8 == 8 || 5 < 10 && 12 > 12" },
-      { name: "Faelnar (Part 1)", expr: "9 < 15 && 6 <= 10 || 2 == 2 && 7 > 3" },
-      { name: "Faelnar (Part 2)", expr: "4 == 5 || 8 < 2 || 10 <= 3 || 1 == 2" },
-      { name: "Lanticse (Part 1)", expr: "6 <= 6 && 12 > 8 || 3 < 4 && 5 > 5" },
-      { name: "Lanticse (Part 2)", expr: "8 < 8 || 2 <= 5 && 9 >= 9 || 11 > 2" },
-      { name: "Cabeltes (Part 1)", expr: "10 > 2 && 5 == 5 || 8 < 4 && 3 == 3" },
-      { name: "Cabeltes (Part 2)", expr: "12 >= 15 && 4 == 4 || 3 < 8 && 7 == 7" },
-      { name: "Omas-as (Part 1)", expr: "5 < 8 && 2 == 2 || 10 <= 4 && 6 > 1" },
-      { name: "Omas-as (Part 2)", expr: "9 > 12 || 4 <= 4 && 8 > 2 || 3 == 5" },
-      { name: "Cotamora (Part 1)", expr: "11 == 11 && 3 < 7 || 14 >= 20 && 2 == 2" },
-      { name: "Cotamora (Part 2)", expr: "6 < 10 || 8 >= 12 && 5 == 5 || 1 > 3" },
-      { name: "Gundaya (Part 1)", expr: "2 < 9 && 7 > 3 || 10 == 10 && 4 < 1" },
-      { name: "Gundaya (Part 2)", expr: "15 >= 10 || 3 < 2 || 6 == 8 || 9 > 5" },
-      { name: "Sandot (Part 1)", expr: "4 <= 8 && 9 == 9 || 12 > 15 && 3 < 6" },
-      { name: "Sandot (Part 2)", expr: "7 > 10 || 5 == 5 && 2 <= 4 || 11 > 11" },
-      { name: "Ansihagan (Part 1)", expr: "8 == 8 && 6 < 3 || 10 >= 10 && 5 > 2" },
-      { name: "Ansihagan (Part 2)", expr: "3 < 10 && 12 <= 12 || 4 > 9 && 7 == 7" },
-      { name: "Platero (Part 1)", expr: "14 < 20 || 2 == 5 && 8 >= 8 || 3 > 1" },
-      { name: "Platero (Part 2)", expr: "5 >= 5 && 9 < 12 || 2 == 3 && 6 < 10" },
-      { name: "Cabaluna (Part 1)", expr: "10 <= 10 && 4 > 1 || 8 == 9 && 3 < 7" },
-      { name: "Cabaluna (Part 2)", expr: "6 > 8 || 11 == 11 && 5 < 2 || 7 == 7" },
-      { name: "Españo (Part 1)", expr: "3 < 5 && 8 >= 4 || 12 < 10 && 2 == 2" },
-      { name: "Españo (Part 2)", expr: "9 == 9 && 4 <= 3 || 6 > 2 && 15 >= 15" },
-      { name: "Langres (Part 1)", expr: "7 < 12 || 3 == 4 && 10 > 5 || 8 <= 2" },
-      { name: "Langres (Part 2)", expr: "2 == 2 && 14 > 10 || 5 < 3 && 9 == 9" },
-      { name: "Advencula (Part 1)", expr: "11 >= 11 && 6 < 8 || 4 == 5 && 10 > 1" },
-      { name: "Advencula (Part 2)", expr: "8 < 4 || 3 >= 9 || 12 == 12 || 2 > 7" },
-      { name: "Sale (Part 1)", expr: "5 <= 10 && 9 > 2 || 3 == 3 && 7 < 4" },
-      { name: "Sale (Part 2)", expr: "10 > 15 || 4 == 4 && 8 < 12 || 6 == 9" },
-      { name: "Potutan (Part 1)", expr: "6 < 9 && 2 == 2 || 11 <= 10 && 5 > 1" },
-      { name: "Potutan (Part 2)", expr: "14 >= 10 || 3 < 1 && 8 == 8 || 4 < 2" },
-      { name: "Mejorada (Part 1)", expr: "7 == 7 && 12 > 5 || 3 <= 3 && 9 < 4" },
-      { name: "Mejorada (Part 2)", expr: "8 > 10 || 5 == 6 || 2 < 7 || 11 == 11" },
-      { name: "Cubero (Part 1)", expr: "4 < 10 && 8 == 8 || 15 <= 12 && 3 > 1" },
-      { name: "Cubero (Part 2)", expr: "9 >= 9 && 2 < 6 || 5 == 5 && 10 > 20" },
-      { name: "Gabriel (Part 1)", expr: "6 <= 8 && 3 > 1 || 11 == 11 && 4 < 2" },
-      { name: "Gabriel (Part 2)", expr: "12 > 10 || 7 == 8 && 3 < 9 || 5 <= 2" },
-      { name: "Daabay (Part 1)", expr: "10 == 10 && 5 < 8 || 2 >= 4 && 9 == 9" },
-      { name: "Daabay (Part 2)", expr: "3 < 7 && 14 >= 10 || 8 < 12 && 6 == 6" }
+    // LIST OF 43 STUDENTS
+    const studentNames = [
+      "Alcober", "Alegado", "Cabeltes", "Cagumbay", "Cainoy", "Daniel", "Dogando", 
+      "Gamolo", "Gaputan", "Daven", "Jeppord", "Jagsay", "Jamero", "Jaminal", 
+      "Lambatan", "Ombiga", "Parilla", "Perez", "Sipsip", "Tabobo", "Talja", "Toledo",
+      "Ambal", "Balateria", "Boluntad", "Amytys", "Leanne", "Genalo", "Genelsa", 
+      "Meira", "Guno", "Mueco", "Ramos", "Sevidal", "Sumalinog", "Ulgasan", 
+      "Valdenibro", "Valenzuela", "Yui", "Jermae", "Tubo", "Nuñez", "Abao"
     ];
+
+    // DETERMINISTIC EXPRESSIONS (5 VARIATIONS PER STUDENT)
+    const baseTemplates = [
+      (a,b,c,d,e,f) => `${a} >= ${b} && ${c} == ${d} || ${e} >= ${f} && ${b} == ${b}`,
+      (a,b,c,d,e,f) => `${a} < ${b} && ${c} < ${d} || ${e} == ${e} && ${f} > ${a}`,
+      (a,b,c,d,e,f) => `${a} == ${a} && ${b} > ${c} || ${d} <= ${e} && ${f} == ${b}`,
+      (a,b,c,d,e,f) => `${f} <= ${a} || ${b} == ${b} && ${c} < ${d} || ${e} == ${f}`,
+      (a,b,c,d,e,f) => `${a} > ${b} && ${c} <= ${d} || ${e} > ${f} && ${a} == ${f}`
+    ];
+
+    // GENERATE 215 TOTAL PROBLEMS (43 STUDENTS x 5 ITEMS)
+    const problemData = [];
+    let count = 1;
+
+    studentNames.forEach((student, studentIndex) => {
+      for (let item = 1; item <= 5; item++) {
+        // Seed arithmetic values deterministically based on studentIndex and item
+        const a = ((studentIndex * 3 + item * 2) % 12) + 2;
+        const b = ((studentIndex * 5 + item * 3) % 12) + 2;
+        const c = ((studentIndex * 2 + item * 4) % 12) + 2;
+        const d = ((studentIndex * 4 + item * 1) % 12) + 2;
+        const e = ((studentIndex * 7 + item * 5) % 12) + 2;
+        const f = ((studentIndex * 6 + item * 2) % 12) + 2;
+
+        const templateFn = baseTemplates[(item - 1) % baseTemplates.length];
+        const exprStr = templateFn(a,b,c,d,e,f);
+
+        problemData.push({
+          id: count++,
+          student: student,
+          itemNum: item,
+          name: `${student} (Item ${item})`,
+          expr: exprStr
+        });
+      }
+    });
 
     // Generate Session Tag
     const sessionId = Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -247,7 +215,7 @@
       ctx.clearRect(0, 0, rect.width, rect.height);
 
       // Render expression text
-      ctx.font = '600 15px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace';
+      ctx.font = '600 14px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace';
       ctx.fillStyle = '#38bdf8'; // Sky blue text color
       ctx.textBaseline = 'middle';
       ctx.fillText(text, 12, rect.height / 2);
@@ -263,21 +231,20 @@
       const grid = document.getElementById('problemsGrid');
       grid.innerHTML = '';
 
-      problemData.forEach((item, index) => {
-        const num = index + 1;
-        const canvasId = `canvas-prob-${num}`;
+      problemData.forEach((item) => {
+        const canvasId = `canvas-prob-${item.id}`;
 
         const card = document.createElement('div');
         card.className = "problem-card bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-lg hover:border-slate-700 transition-all flex flex-col justify-between gap-3";
-        card.setAttribute('data-search', `${num} ${item.name}`.toLowerCase());
+        card.setAttribute('data-search', `${item.id} ${item.student} item ${item.itemNum}`.toLowerCase());
 
         card.innerHTML = `
           <div class="flex items-center justify-between border-b border-slate-800/80 pb-2.5">
             <div class="flex items-center gap-2">
-              <span class="w-6 h-6 rounded-md bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 font-bold text-xs flex items-center justify-center">${num}</span>
-              <h3 class="font-bold text-slate-100 text-sm tracking-wide">${item.name}</h3>
+              <span class="w-6 h-6 rounded-md bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 font-bold text-xs flex items-center justify-center">${item.id}</span>
+              <h3 class="font-bold text-slate-100 text-sm tracking-wide">${item.student}</h3>
             </div>
-            <span class="text-[10px] font-mono bg-slate-950 px-2 py-0.5 rounded text-slate-500 border border-slate-800">Assignee</span>
+            <span class="text-[10px] font-mono bg-indigo-950/80 text-indigo-300 px-2 py-0.5 rounded border border-indigo-800/60 font-semibold">Item ${item.itemNum} of 5</span>
           </div>
           
           <div class="bg-slate-950 border border-slate-800 rounded-lg p-1.5 relative overflow-hidden">
@@ -290,8 +257,8 @@
 
       // Render expression canvases after DOM elements are placed
       setTimeout(() => {
-        problemData.forEach((item, index) => {
-          drawExpressionCanvas(`canvas-prob-${index + 1}`, item.expr);
+        problemData.forEach((item) => {
+          drawExpressionCanvas(`canvas-prob-${item.id}`, item.expr);
         });
       }, 50);
     }
@@ -330,6 +297,10 @@
     // Tab switch / blur detection
     window.addEventListener('blur', triggerSecurityBlur);
     window.addEventListener('focus', restoreFocus);
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) triggerSecurityBlur();
+      else restoreFocus();
+    });
 
     // Prevent context menu (right click)
     document.addEventListener('contextmenu', (e) => e.preventDefault());
@@ -338,7 +309,7 @@
     document.addEventListener('keydown', (e) => {
       if (e.key === 'PrintScreen') {
         triggerSecurityBlur();
-        navigator.clipboard.writeText('');
+        if (navigator.clipboard) navigator.clipboard.writeText('');
         e.preventDefault();
       }
 
@@ -358,8 +329,8 @@
 
     // Handle window resize canvas re-renders
     window.addEventListener('resize', () => {
-      problemData.forEach((item, index) => {
-        drawExpressionCanvas(`canvas-prob-${index + 1}`, item.expr);
+      problemData.forEach((item) => {
+        drawExpressionCanvas(`canvas-prob-${item.id}`, item.expr);
       });
     });
 
